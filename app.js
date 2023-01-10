@@ -6,6 +6,8 @@ import * as db from "./mysqlDatabase.js";
 
 const app = express();
 
+// deploymnet
+
 // EJS + Body parser
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -22,15 +24,16 @@ app.get("/", async (req, res) => {
   res.render("index.ejs", { note: notes });
 });
 
-app.post("/createNote", (req, res) => {
+app.post("/createNote", async (req, res) => {
   const data = req.body;
-  console.log(data);
-  note.push({ id: 0, title: data.title, content: data.content });
+  await db.addNote(data.title, data.content);
   res.redirect("/");
 });
 
-app.post("delete", (req, res) => {
-  console.log(req);
+app.post("/deleteNote", async (req, res) => {
+  const id = req.body.id;
+  await db.deleteNote(id);
+  res.redirect("/");
 });
 
 // app.get("/notes", (req, res) => {
@@ -70,7 +73,7 @@ app.post("delete", (req, res) => {
 //   res.redirect("/notes");
 // });
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });

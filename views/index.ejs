@@ -18,9 +18,9 @@
 
     <% for (let i=0; i<note.length; i++) { %>
     <h3><%= note[i].title %></h3>
-    <p><%=note[i].content%></p>
-    <form action="createNote" method="DELETE">
-        <input type="hidden" id=<%=note.id%> name="??">
+    <p><%=note[i].contents%></p>
+    <form action="/deleteNote" method="POST">
+        <input type="hidden" name="id" value=<%=note[i].id%>>
         <button type="submit">Delete</button>
     </form>
     <% } %>

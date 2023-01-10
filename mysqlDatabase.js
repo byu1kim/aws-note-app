@@ -10,6 +10,7 @@ const pool = mysql
     user: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
+    port: process.env.MYSQLPORT || 3306, // railway deploy를 위한 것
   })
   .promise();
 
@@ -22,7 +23,13 @@ export async function getNotes() {
 }
 
 export async function addNote(title, contents) {
-  const query = `INSERT NTO notes (title, contents) VALUES (?,?)`;
-  await pool.query(query, [title, contents]);
+  const query = `INSERT INTO notes (title, contents) VALUES (?,?)`;
+  const [result] = await pool.query(query, [title, contents]);
+  return result;
+}
+
+export async function deleteNote(id) {
+  const [result] = await pool.query(`DELETE FROM notes WHERE id = ?`, [id]);
+  return result;
 }
 // ? -> 이걸 data injunction? 이라고 함..?  ? == ${title}
